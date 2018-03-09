@@ -20,3 +20,14 @@ function getMinLon(key){
   var obj = JSON.parse(str);
   return obj[key].minlongitude ;
 }
+
+function getRandomLat(key){
+  var obj = JSON.parse(str);
+  return ( Math.random()* ( obj[key].maxlatitude - obj[key].minlatitude )+obj[key].minlatitude ).toFixed(4)
+}
+
+
+function getRandomLon(key){
+  var obj = JSON.parse(str);
+  return ( Math.random()*(obj[key].maxlongitude - obj[key].minlongitude ) +obj[key].minlongitude ).toFixed(4)
+}
