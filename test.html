@@ -3,7 +3,7 @@
 
 <head>
   <script src="script.js" type="text/javascript"></script>
-
+  <script src="CountryCode.js" type="text/javascript"></script>
 
 </head>
 
@@ -14,11 +14,13 @@
     for (let index = 1; index <= json_obj1.total_pages; index++) {
       var url = 'https://api.themoviedb.org/3/tv/on_the_air?api_key=39fda37c1a2b7aca9c188eb7d67a34e1&page=' + index;
       var json_obj = JSON.parse(Get(url));
-      var latlon = JSON.parse('out.json');
       document.write("<p>");
       var i = 0;
       while (i < json_obj.results.length) {
-        document.write(i + " " + json_obj.results[i].original_name + " " + json_obj.results[i].origin_country[0] + " " +"</br>");
+        if(json_obj.results[i].origin_country.length==0)  //no country data
+          document.write(i +" No country " + json_obj.results[i].original_name + " " + json_obj.results[i].origin_country[0] + " " +"</br>");
+        else  //have data
+          document.write(i +" "+getMaxLat(json_obj.results[i].origin_country[0])+ " " + json_obj.results[i].original_name + " " + json_obj.results[i].origin_country[0] + " " +"</br>");
         i++;
       }
       document.write("</p>");
