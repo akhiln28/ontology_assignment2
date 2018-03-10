@@ -2,9 +2,11 @@
 <html>
 
 <head>
-  <script src="elabel.js" type="text/javascript"></script>
+  <!-- <script src="elabel.js" type="text/javascript"></script> -->
   <script src="CountryCode.js" type="text/javascript"></script>
+  <script src="countryCodeToName.js" type="text/javascript"></script>
   <script src="mapData.js" type="text/javascript"></script>
+
   <style>
     #map {
       height: 600px;
@@ -31,7 +33,7 @@
         // icon: "https://vector.me/files/images/4/1/417872/simple_glossy_circle_button_red",
         icon: 'icon.png',
         visible: true,
-        optimize: false,
+        optimize: true,
         label: {text: "random text"},
         map: map
       });

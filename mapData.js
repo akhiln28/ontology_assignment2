@@ -21,8 +21,9 @@ function hitTvApi(map){
       else{
         var TVtitle = json_obj.results[i].original_name;
         var key = json_obj.results[i].origin_country[0];
-        var lat = getRandomLat(key);
-        var lon = getRandomLon(key);
+        var dictLatLon = getRANLATLON(key);
+        var lat = dictLatLon.lat;
+        var lon = dictLatLon.lon;
         //make marker
         var myLatlng = new google.maps.LatLng(lat,lon);
 
