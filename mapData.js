@@ -32,7 +32,7 @@ function hitTvApi(map){
             icon: 'icon.png',
             visible: true,
             optimize: false,
-            label: {text: "random text"},
+            label: {text: TVtitle},
             map: map
         });
       }
