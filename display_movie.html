@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!-- <script src="elabel.js" type="text/javascript"></script> -->
+	<script src="CountryCode.js" type="text/javascript"></script>
+	<script src="countryCodeToName.js" type="text/javascript"></script>
+
+	<style>
+		#map {
+			height: 600px;
+			width: 100%;
+		}
+
+		/* Optional: Makes the sample page fill the window. */
+
+		html,
+		body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+
+    h3{
+      text-align: center;
+    }
+
+		/*
+		.hidden{
+		  visibility: hidden;
+		} */
+
+		.popup-tip-anchor {
+			height: 0;
+			position: absolute;
+			/*The max width of the info window.*/
+			width: 200px;
+		}
+
+		/* The bubble is anchored above the tip. */
+
+		.popup-bubble-anchor {
+			position: absolute;
+			width: 100%;
+			bottom: /* TIP_HEIGHT= */
+			8px;
+			left: 0;
+		}
+
+		/* Draw the tip. */
+
+		.popup-bubble-anchor::after {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			/* Center the tip horizontally. */
+			transform: translate(-50%, 0);
+			/* The tip is a https://css-tricks.com/snippets/css/css-triangle/ */
+			width: 0;
+			height: 0;
+			/* The tip is 8px high, and 12px wide. */
+			border-left: 6px solid transparent;
+			border-right: 6px solid transparent;
+			border-top: /* TIP_HEIGHT= */
+			8px solid white;
+		}
+
+		/* The popup bubble itself. */
+
+		.popup-bubble-content {
+			position: absolute;
+			top: 0;
+			left: 0;
+			transform: translate(-50%, -100%);
+			/* Style the info window. */
+			background-color: white;
+			padding: 5px;
+			border-radius: 5px;
+			font-family: sans-serif;
+			overflow-y: auto;
+			font-size: 9px;
+			max-height: 40px;
+			box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.5);
+		}
+	</style>
+</head>
+
+<body>
+	<h3>Movies around the globe</h3>
+	<div id="map"></div>
+	<script>
+		var JSTR = {};
+		var count = 0;
+		function Get(yourUrl) {
+			var Httpreq = new XMLHttpRequest(); // a new request
+			Httpreq.open("GET", yourUrl, false);
+			Httpreq.send(null);
+			return Httpreq.responseText;
+		}
+
+		function hitMovieApi() {
+			var arr = ["AR", "AU", "BR", "CA", "CN", "DK", "FR", "DE", "GR", "IN", "ID", "IR", "IT", "JP", "KR", "NL", "NO", "PH", "PL", "RU", "ES", "SE", "CH", "TR", "UA", "GB", "US"];
+			for (let i = 0; i < arr.length; i++) {
+				var key = arr[i];
+				var json_obj = JSON.parse(Get('https://api.themoviedb.org/3/movie/now_playing?api_key=39fda37c1a2b7aca9c188eb7d67a34e1&page=1&region=' + key));
+				for (let i = 0; i < json_obj.results.length; i++) {
+					const element = json_obj.results[i];
+					var latlon = getRANLATLON(key);
+					var id = "id" + count;
+					var movieTitle = json_obj.results[i].original_title;
+
+					var dictTemp = {
+						"id": id,
+						"title": movieTitle,
+						"key": key,
+						"lat": latlon.lat,
+						"lon": latlon.lon
+					};
+					JSTR[id] = dictTemp;
+					document.write("<div id=" + '"' + id + '" class = "hidden">' + movieTitle + "</div>");
+					count++;
+				}
+			}
+		}
+
+		function getJSON() {
+			return JSTR;
+		}
+
+		window.onload = hitMovieApi();
+
+	</script>
+	<script>
+
+		var map, popup, Popup;
+
+		function initMap() {
+
+			definePopupClass();
+
+			var uluru = { lat: 28.34, lng: 77.12 };
+			var uluru1 = { lat: 28.34, lng: 50 };
+			map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 2,
+				center: uluru
+			});
+			map.setOptions({ styles: styles['hide'] });
+
+			addPopup(map);
+
+		}
+		var styles = {
+			default: null,
+			hide: [
+				{
+					featureType: 'all',
+					elementType: 'labels',
+					stylers: [{ visibility: 'off' }]
+				},
+				{
+					featureType: 'administrative.country',
+					elementType: 'labels',
+					stylers: [{ visibility: 'on' }]
+				},
+				{
+					featureType: 'administrative.country',
+					elementType: 'labels.text',
+					stylers: [{ lightness: '70' }]
+				},
+
+				{
+					featureType: 'transit',
+					elementType: 'labels.icon',
+					stylers: [{ visibility: 'off' }]
+				}
+			]
+		};
+
+
+		function addPopup(map) {
+			var str = getJSON();
+			console.log(str);
+			for (var key in str) {
+				popup = new Popup(
+					new google.maps.LatLng(str[key].lat, str[key].lon),
+					document.getElementById(key));
+
+				popup.setMap(map);
+			}
+
+		}
+
+
+		/** Defines the Popup class. */
+		function definePopupClass() {
+			/**
+			 * A customized popup on the map.
+			 * @param {!google.maps.LatLng} position
+			 * @param {!Element} content
+			 * @constructor
+			 * @extends {google.maps.OverlayView}
+			 */
+			Popup = function (position, content) {
+				this.position = position;
+
+				content.classList.add('popup-bubble-content');
+
+				var pixelOffset = document.createElement('div');
+				pixelOffset.classList.add('popup-bubble-anchor');
+				pixelOffset.appendChild(content);
+
+				this.anchor = document.createElement('div');
+				this.anchor.classList.add('popup-tip-anchor');
+				this.anchor.appendChild(pixelOffset);
+
+				// Optionally stop clicks, etc., from bubbling up to the map.
+				this.stopEventPropagation();
+			};
+			// NOTE: google.maps.OverlayView is only defined once the Maps API has
+			// loaded. That is why Popup is defined inside initMap().
+			Popup.prototype = Object.create(google.maps.OverlayView.prototype);
+
+			/** Called when the popup is added to the map. */
+			Popup.prototype.onAdd = function () {
+				this.getPanes().floatPane.appendChild(this.anchor);
+			};
+
+			/** Called when the popup is removed from the map. */
+			Popup.prototype.onRemove = function () {
+				if (this.anchor.parentElement) {
+					this.anchor.parentElement.removeChild(this.anchor);
+				}
+			};
+
+			/** Called when the popup needs to draw itself. */
+			Popup.prototype.draw = function () {
+				var divPosition = this.getProjection().fromLatLngToDivPixel(this.position);
+				// Hide the popup when it is far out of view.
+				var display =
+					Math.abs(divPosition.x) < 4000 && Math.abs(divPosition.y) < 4000 ?
+						'block' :
+						'none';
+
+				if (display === 'block') {
+					this.anchor.style.left = divPosition.x + 'px';
+					this.anchor.style.top = divPosition.y + 'px';
+				}
+				if (this.anchor.style.display !== display) {
+					this.anchor.style.display = display;
+				}
+			};
+
+			/** Stops clicks/drags from bubbling up to the map. */
+			Popup.prototype.stopEventPropagation = function () {
+				var anchor = this.anchor;
+				anchor.style.cursor = 'auto';
+
+				['click', 'dblclick', 'contextmenu', 'wheel', 'mousedown', 'touchstart',
+					'pointerdown']
+					.forEach(function (event) {
+						anchor.addEventListener(event, function (e) {
+							e.stopPropagation();
+						});
+					});
+			};
+		}
+	</script>
+
+
+
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKoqSfq36RAA8V4agXV2iP5e4Ixipd-HM&callback=initMap">
+	</script>
+</body>
+
+</html>

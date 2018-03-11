@@ -266,7 +266,25 @@ function getRANLATLON(countryCode){
     return latlon;
   }
   else {
-    var india = {'lat':20.59,'lon':78.96};
-    return india;
+    var array = obj['India']
+    var ran = Math.floor(Math.random()*array.length);
+    var latlon = {'lat':array[ran].lat ,'lon': array[ran].lon };
+    return latlon;
+  }
+}
+
+
+function getRANLATLONTV(countryCode){
+  var cName = getCountryName(countryCode);
+  var obj = JSON.parse(cities);
+  if(obj.hasOwnProperty(cName)){
+    var array = obj[cName]
+    var ran = Math.floor(Math.random()*array.length);
+    var latlon = {'avail':true,'lat':array[ran].lat ,'lon': array[ran].lon };
+    return latlon;
+  }
+  else {
+    var latlon = {'avail':false,'lat':0 ,'lon':0 };
+    return latlon;
   }
 }
