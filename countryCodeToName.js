@@ -256,7 +256,6 @@ function getCountryName (countryCode) {
         return countryCode;
     }
 }
-
 function getRANLATLON(countryCode){
   var cName = getCountryName(countryCode);
   var obj = JSON.parse(cities);

@@ -27,22 +27,13 @@
         center: uluru
       });
       map.setOptions({styles: styles['hide']});
-
-      var marker1 = new google.maps.Marker({
-        position: uluru1,
-        // icon: "https://vector.me/files/images/4/1/417872/simple_glossy_circle_button_red",
-        icon: 'icon.png',
-        visible: true,
-        optimize: true,
-        label: {text: "random text"},
-        map: map
-      });
+      
       // var label = new ELabel(new GLatLng(44.3,-78.8), "Utopia");
       // map.addOverlay(label);
 
       //calling fn from mapData
       hitTvApi(map);
-
+      hitMovieApi(map);
     }
     var styles = {
         default: null,
