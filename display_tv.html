@@ -4,7 +4,6 @@
 <head>
 	<!-- <script src="elabel.js" type="text/javascript"></script> -->
 	<title>TV Shows around the world </title>
-	<script src="CountryCode.js" type="text/javascript"></script>
 	<script src="countryCodeToName.js" type="text/javascript"></script>
 
 	<style>
@@ -163,7 +162,11 @@
 							priority = "Prior5";
 
 						JSTR[id] = dictTemp;
-						document.write("<div id=" + '"' + id + '" class ="'+priority+'">' + TVtitle + "</div>");
+						document.write("<div id=" + '"' + id + '" class ="'+priority+'">' + TVtitle + " </div>");
+						var e1 = document.getElementById("p"+id);
+						if(e1){
+							e1.addEventListener("click", function(){ e1.style.display = "none"; });
+						}
 						count++;
 					}
 					i++;
@@ -317,13 +320,14 @@
 				var anchor = this.anchor;
 				anchor.style.cursor = 'auto';
 
-				['click', 'dblclick', 'contextmenu', 'wheel', 'mousedown', 'touchstart',
+				[ 'dblclick', 'contextmenu', 'wheel', 'mousedown', 'touchstart',
 					'pointerdown']
 					.forEach(function (event) {
 						anchor.addEventListener(event, function (e) {
 							e.stopPropagation();
 						});
 					});
+				
 			};
 		}
 	</script>

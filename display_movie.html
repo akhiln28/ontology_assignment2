@@ -3,7 +3,6 @@
 
 <head>
 	<!-- <script src="elabel.js" type="text/javascript"></script> -->
-	<script src="CountryCode.js" type="text/javascript"></script>
 	<script src="countryCodeToName.js" type="text/javascript"></script>
 
 	<style>
@@ -21,34 +20,34 @@
 			padding: 0;
 		}
 
-    h3{
-      text-align: center;
-    }
+		h3 {
+			text-align: center;
+		}
 
 		/*
 		.hidden{
 		  visibility: hidden;
 		} */
 
-    		.Prior1{
-    		  font-size: 20px;
-    		}
+		.Prior1 {
+			font-size: 20px;
+		}
 
-    		.Prior2{
-    			font-size: 15px;
-    		}
+		.Prior2 {
+			font-size: 15px;
+		}
 
-    		.Prior3{
-    			font-size: 12px;
-    		}
+		.Prior3 {
+			font-size: 12px;
+		}
 
-    		.Prior4{
-    		  font-size: 9px;
-    		}
+		.Prior4 {
+			font-size: 9px;
+		}
 
-    		.Prior5{
-    			font-size: 6px;
-    		}
+		.Prior5 {
+			font-size: 6px;
+		}
 
 
 		.popup-tip-anchor {
@@ -130,7 +129,7 @@
 					var latlon = getRANLATLON(key);
 					var id = "id" + count;
 					var movieTitle = json_obj.results[i].original_title;
-          var popularity = json_obj.results[i].popularity;
+					var popularity = json_obj.results[i].popularity;
 
 					var dictTemp = {
 						"id": id,
@@ -139,23 +138,23 @@
 						"lat": latlon.lat,
 						"lon": latlon.lon
 					};
-          var priority = "Prior4";
-          if(popularity > 200)
-            priority = "Prior1";
-          else if(popularity > 150)
-            priority = "Prior2";
-          else if(popularity > 100)
-            priority = "Prior3";
-          else if(popularity > 10 )
-            priority = "Prior4";
-          else
-            priority = "Prior5";
+					var priority = "Prior4";
+					if (popularity > 200)
+						priority = "Prior1";
+					else if (popularity > 150)
+						priority = "Prior2";
+					else if (popularity > 100)
+						priority = "Prior3";
+					else if (popularity > 10)
+						priority = "Prior4";
+					else
+						priority = "Prior5";
 
-          JSTR[id] = dictTemp;
-          document.write("<div id=" + '"' + id + '" class ="'+priority+'">' + movieTitle + "</div>");
+					JSTR[id] = dictTemp;
+					document.write("<div id=" + '"' + id + '" class ="' + priority + '">' + movieTitle + "</div>");
 					count++;
 				}
-        // console.log(json_obj);
+				// console.log(json_obj);
 			}
 
 		}
@@ -164,7 +163,7 @@
 			return JSTR;
 		}
 
-    function getCount(){
+		function getCount() {
 			return count;
 		}
 
@@ -225,19 +224,20 @@
 			// 	popup = new Popup(
 			// 		new google.maps.LatLng(str[key].lat, str[key].lon),
 			// 		document.getElementById(key));
-      //
+			//
 			// 	popup.setMap(map);
 			// }
-      var c = getCount();
-      var i = c-1;
-      for(i=c-1;i>=0;i--){
-        var key = "id"+i;
-        popup = new Popup(
-            new google.maps.LatLng(str[key].lat, str[key].lon),
-            document.getElementById(key));
+			var c = getCount();
+			var i = c - 1;
+			for (i = c - 1; i >= 0; i--) {
+				var key = "id" + i;
+				popup = new Popup(
+					new google.maps.LatLng(str[key].lat, str[key].lon),
+					document.getElementById(key));
 
-          popup.setMap(map);
-      }
+				popup.setMap(map);
+			}
+			console.log(c);
 		}
 
 
