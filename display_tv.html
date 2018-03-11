@@ -26,10 +26,27 @@
 			text-align: center;
 		}
 
-		/*
-		.hidden{
-		  visibility: hidden;
-		} */
+
+		.Prior1{
+		  font-size: 20px;
+		}
+
+		.Prior2{
+			font-size: 15px;
+		}
+
+		.Prior3{
+			font-size: 12px;
+		}
+
+		.Prior4{
+		  font-size: 9px;
+		}
+
+		.Prior5{
+			font-size: 6px;
+		}
+
 
 		.popup-tip-anchor {
 			height: 0;
@@ -80,7 +97,7 @@
 			border-radius: 5px;
 			font-family: sans-serif;
 			overflow-y: auto;
-			font-size: 9px;
+			/* font-size: 9px; */
 			max-height: 40px;
 			box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.5);
 		}
@@ -122,7 +139,7 @@
 							continue;
 						}
 
-
+						var popularity = json_obj.results[i].popularity;
 						var lat = dictLatLon.lat;
 						var lon = dictLatLon.lon;
 						//make marker
@@ -131,11 +148,22 @@
 							"title": TVtitle,
 							"key": key,
 							"lat": lat,
-							"lon": lon
+							"lon": lon,
 						};
+						var priority = "Prior4";
+						if(popularity > 200)
+							priority = "Prior1";
+						else if(popularity > 150)
+							priority = "Prior2";
+						else if(popularity > 100)
+							priority = "Prior3";
+						else if(popularity > 10 )
+							priority = "Prior4";
+						else
+							priority = "Prior5";
 
 						JSTR[id] = dictTemp;
-						document.write("<div id=" + '"' + id + '" class = "hidden">' + TVtitle + "</div>");
+						document.write("<div id=" + '"' + id + '" class ="'+priority+'">' + TVtitle + "</div>");
 						count++;
 					}
 					i++;
@@ -145,6 +173,9 @@
 
 		function getJSON() {
 			return JSTR;
+		}
+		function getCount(){
+			return count;
 		}
 
 		window.onload = hitTvApi();
@@ -201,12 +232,22 @@
 		function addPopup(map) {
 			var str = getJSON();
 			console.log(str);
-			for (var key in str) {
+			// for (var key in str) {
+			// 	popup = new Popup(
+			// 		new google.maps.LatLng(str[key].lat, str[key].lon),
+			// 		document.getElementById(key));
+			//
+			// 	popup.setMap(map);
+			// }
+			var c = getCount();
+			var i = c-1;
+			for(i=c-1;i>=0;i--){
+				var key = "id"+i;
 				popup = new Popup(
-					new google.maps.LatLng(str[key].lat, str[key].lon),
-					document.getElementById(key));
+						new google.maps.LatLng(str[key].lat, str[key].lon),
+						document.getElementById(key));
 
-				popup.setMap(map);
+					popup.setMap(map);
 			}
 
 		}
